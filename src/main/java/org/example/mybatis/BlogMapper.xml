@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 这里的namespace必须是BlogMapper的全类名 -->
+<mapper namespace="org.example.mybatis.BlogMapper">
+    <!-- MyBatis 会自动将查询出来的记录封装为resultType设定类型的对象，这里体会一下ORM的思想-->
+    <select id="selectBlog" resultType="org.example.mvc.entity.Blog">
+            select * from Blog where id = #{id}
+    </select>
+
+    <!-- 注意这个时候写在站位符中的属性名要有get方法,否则调用会失败-->
+    <select id="selectBlogByObj" resultType="org.example.mvc.entity.Blog">
+            select * from Blog where id = #{id}
+    </select>
+
+
+    <select id="selectBlogByMap" resultType="org.example.mvc.entity.Blog">
+            select * from Blog where id
+            <if test = "id == 1">
+                = #{id}
+            </if>
+
+    </select>
+
+    <select id="selectBlogByList" resultType="org.example.mvc.entity.Blog">
+        select * from Blog
+        <where>
+            <if test = "list != null and list.size() > 0">
+                id in
+                <foreach collection="list" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+    </where>
+    </select>
+
+    <select id="selectBlogByArray" resultType="org.example.mvc.entity.Blog">
+        select * from Blog where id in
+        <foreach collection="array" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectAllReturnMap" resultType="map">
+         select * from Blog
+    </select>
+
+    <select id="selectByMark" resultType="org.example.mvc.entity.Blog">
+            select * from Blog where id = #{id}
+             <if test = ' "张三".equals(name) '>
+                 <bind name="pattern" value="'%' + name + '%'" />
+                 and name =  #{pattern}
+             </if>
+    </select>
+
+    <select id="selectByDollar" resultType="org.example.mvc.entity.Blog">
+             select * from Blog where id = ${id} and name = ${name}
+    </select>
+
+    <!--
+            useGeneratedKeys 开启接收主键
+            keyProperty 将返回的主键放在对象的哪个属性上
+    -->
+    <insert id="insertEntity"  useGeneratedKeys="true" keyProperty="id" >
+         insert into Blog (name)
+         values (#{name})
+    </insert>
+
+    <select id="testChoose" resultType="org.example.mvc.entity.Blog">
+         select * from Blog  where status = 'active'
+        <choose>
+            <when test="title != null">
+                AND title like #{title}
+            </when>
+            <when test=" name != null ">
+                AND name like #{name}
+            </when>
+            <otherwise>
+                AND status != 'active'
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

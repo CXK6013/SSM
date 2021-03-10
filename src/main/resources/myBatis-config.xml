@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+
+    <!--加载配置文件-->
+    <properties resource="jdbc.properties"/>
+    <settings>
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
+    <typeAliases>
+        <package name="org.example.mvc.entity"/>
+    </typeAliases>
+
+    <typeHandlers>
+        <package name="org.example.mybatis.MyTypeHandler"/>
+    </typeHandlers>
+
+    <!--指定默认环境, 一般情况下,我们有三套环境,dev 开发 ,uat 测试 ,prod 生产 -->
+    <environments default="development">
+        <environment id="development">
+            <!-- 设置事务管理器的管理方式  -->
+            <transactionManager type="JDBC"/>
+            <!-- 设置数据源连接的关联方式为数据池  -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.dev.driver}"/>
+                <property name="url" value="${jdbc.dev.url}"/>
+                <property name="username" value="${jdbc.dev.username}"/>
+                <property name="password" value="${jdbc.dev.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+
+    <mappers>
+        <!--设置扫描的xml-->
+        <package name = "org.example.mybatis"/>
+    </mappers>
+
+
+</configuration>

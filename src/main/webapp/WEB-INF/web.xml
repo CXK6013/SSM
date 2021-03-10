@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         id="WebApp_ID" version="3.0">
+
+
+    <display-name>studySpringFrameWork</display-name>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!-- 这里用来加载多有DispatcherServlet共享的bean-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:applicationContext.xml</param-value>
+    </context-param>
+
+    <servlet>
+        <servlet-name>springDispatcherServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!--初始dispatcherServlet需要的参数contextConfigLocation,DispatcherServlet有这个属性-->
+        <init-param>
+            <!--加载配置文件,指明配置文件的位置-->
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring-MVC.xml</param-value>
+        </init-param>
+        <!--元素标记容器是否应该在web应用程序启动的时候就加载这个servlet，(实例化并调用其init()方法)。-->
+        <load-on-startup>1</load-on-startup>
+        <multipart-config>
+            <location>c:temp</location>
+            <max-file-size>1048576</max-file-size>
+            <!--单个数据大小-->
+            <file-size-threshold>10240</file-size-threshold>
+        </multipart-config>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>springDispatcherServlet</servlet-name>
+        <!--/:拦截一切请求 -->
+        <!--  /user:  拦截所有以/user开头的请求  -->
+        <!--  /user/abc.do: 只拦截该请求   -->
+        <!--  .action:  只拦截.action的请求  -->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>encoding</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encoding</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+</web-app>
